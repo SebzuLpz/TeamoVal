@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Para Mi Novia - Mensajes de Amor</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+    /* Basic Styles */
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #ffd6e8, #ff8fb3);
+      font-family: 'Great Vibes', cursive;
+      color: #fff;
+      position: relative;
+      user-select: none;
+    }
+
+    /* Container for bubbles */
+    #bubble-container {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none; 
+    }
+
+    /* Bubble base style */
+    .bubble {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.85);
+      color: #d81e5b;
+      padding: 20px 15px; /* Reduced padding for smaller screens */
+      border-radius: 100px;
+      font-weight: bold;
+      font-size: 1rem; /* Adjusted font size */
+      box-shadow: 0 4px 10px rgba(216, 30, 91, 0.5);
+      cursor: pointer;
+      pointer-events: auto; 
+      user-select: none;
+      white-space: nowrap;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .bubble:hover {
+      transform: scale(1.15);
+      box-shadow: 0 6px 15px rgba(216, 30, 91, 0.8);
+    }
+
+    /* Floating animation */
+    @keyframes floatUpDown {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+      }
+      50% {
+        transform: translateY(-20px) translateX(10px);
+      }
+    }
+
+    /* The download heart button */
+    #download-button {
+      position: fixed;
+      bottom: 20px; /* Adjusted for smaller screens */
+      right: 20px; /* Adjusted for smaller screens */
+      background: linear-gradient(145deg, #ff4a7b, #d81853);
+      width: 60px; /* Reduced size for smaller screens */
+      height: 60px; /* Reduced size for smaller screens */
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(216, 30, 91, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    #download-button:hover {
+      transform: scale(1.15);
+      box-shadow: 0 6px 20px rgba(216, 30, 91, 1);
+    }
+
+    /* Heart shape inside the button */
+    #download-button svg {
+      fill: white;
+      width: 30px; /* Adjusted size */
+      height: 30px; /* Adjusted size */
+      pointer-events: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .bubble {
+        font-size: 0.9rem; /* Smaller font size for mobile */
+        padding: 15px 10px; /* Further reduced padding */
+      }
+
+      #download-button {
+        width: 50px; /* Smaller button */
+        height: 50px; /* Smaller button */
+      }
+
+      #download-button svg {
+        width: 25px; /* Smaller icon */
+        height: 25px; /* Smaller icon */
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="bubble-container"></div>
+
+<a id="download-button" href="document/Ji.pdf" download="Ji.pdf" title="Descargar Ji.pdf">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 
+    4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 
+    16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 
+    11.54L12 21.35z"/>
+  </svg>
+</a>
+
+<script>
+
+  const loveMessages = [
+    "Te amo ❤️",
+    "Eres el sol que ilumina mi vida 🌞",
+    "Eres mi vida 🩷",
+    "Mi corazón es tuyo 💖",
+    "Siempre juntos 👫",
+    "Mi amor infinito ♾️",
+    "Eres mi inspiración 🌹",
+    "Contigo soy feliz 😊",
+    "Juntos por siempre 💕",
+    "Eres mi mundo 🌍",
+    "Te pienso siempre 🌟",
+  ];
+
+  const bubbleContainer = document.getElementById('bubble-container');
+  const bubbleCountInitial = 10;
+
+  
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  
+  function randomPosition(margin = 100) {
+    const x = Math.random() * (window.innerWidth - margin*2) + margin;
+    const y = Math.random() * (window.innerHeight - margin*2) + margin;
+    return {x, y};
+  }
+
+
+  function createBubble(text, x, y) {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+
+
+    bubble.style.left = x + 'px';
+    bubble.style.top = y + 'px';
+
+
+    bubble.style.animation = `floatUpDown ${randInt(5, 9)}s ease-in-out infinite`;
+    bubble.style.animationDelay = `${Math.random() * 5}s`;
+
+ 
+    bubble.addEventListener('click', (e) => {
+      e.stopPropagation();
+      spawnMoreBubbles(x, y);
+ 
+      bubble.style.transform = 'scale(1.3)';
+      setTimeout(() => {
+        bubble.style.transform = '';
+      }, 300);
+    });
+
+    return bubble;
+  }
+
+
+  function spawnMoreBubbles(centerX, centerY, n = 5) {
+    for (let i = 0; i < n; i++) {
+      const angle = Math.random() * 2 * Math.PI;
+      const distance = randInt(30, 80);
+      const x = Math.min(window.innerWidth - 50, Math.max(50, centerX + Math.cos(angle) * distance));
+      const y =  Math.min(window.innerHeight - 50, Math.max(50, centerY + Math.sin(angle) * distance));
+
+      const message = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+      const newBubble = createBubble(message, x, y);
+      bubbleContainer.appendChild(newBubble);
+
+
+      newBubble.style.transform = 'scale(0)';
+      setTimeout(() => {
+        newBubble.style.transition = 'transform 0.3s ease';
+        newBubble.style.transform = 'scale(1)';
+      }, 10);
+    }
+  }
+
+
+  function init() {
+    for (let i = 0; i < bubbleCountInitial; i++) {
+      const pos = randomPosition(80);
+      const message = loveMessages[i % loveMessages.length];
+      const bubble = createBubble(message, pos.x, pos.y);
+      bubbleContainer.appendChild(bubble);
+    }
+  }
+
+  init();
+
+</script>
+
+</body>
+</html>
